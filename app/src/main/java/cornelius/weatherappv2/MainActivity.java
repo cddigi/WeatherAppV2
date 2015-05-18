@@ -1,7 +1,9 @@
 package cornelius.weatherappv2;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,12 +26,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity
         implements CurrentWeatherFragment.OnFragmentInteractionListener,
         ForecastFragment.OnFragmentInteractionListener, Downloader.DownloadListener<JSONObject>
 {
     String zipcode;
+    String[] zipStringArray;
+    ArrayList<String> recentZipcodes;
+    Boolean imperialPreferred;
     android.app.FragmentManager fragmentManager;
     android.app.FragmentTransaction fragmentTransaction;
     CurrentWeatherFragment weatherFragment;
@@ -38,6 +44,7 @@ public class MainActivity extends ActionBarActivity
     int selectedFragment;
     int units;
     final static int NUM_PAGES = 7;
+    final static int MAX_LIST_SIZE = 5;
     private ViewPager mObservationPager;
     private ViewPager mForecastPager;
     private PagerAdapter mObservationPagerAdapter;
@@ -63,6 +70,41 @@ public class MainActivity extends ActionBarActivity
 
         selectedFragment = 0;
         units = 0;
+
+        // get stored zips and measurement preference from previous sessions
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String zipString = sharedPref.getString("zipcodes","");
+        if(zipString.length() > 1)
+        {
+            zipString = zipString.substring(1, zipString.length()-1);
+            zipStringArray = zipString.split(",");
+            for(int i = 0; i < zipStringArray.length; i++)
+                recentZipcodes.add(zipStringArray[i].trim());
+        }
+
+        imperialPreferred = sharedPref.getBoolean("imperial", true);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        getLocation(zipcode);
+    }
+
+    @Override
+    protected void onStop()
+    {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        if(recentZipcodes.size() > 0)
+            editor.putString("zipcodes", recentZipcodes.toString());
+
+        editor.putBoolean("imperial", imperialPreferred);
+
+        // Commit the edits!
+        editor.commit();
     }
     
 
@@ -120,13 +162,6 @@ public class MainActivity extends ActionBarActivity
         {
             return NUM_PAGES;
         }
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-        getLocation(zipcode);
     }
 
     @Override
@@ -204,7 +239,33 @@ public class MainActivity extends ActionBarActivity
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                zipcode = input.getText().toString();
+
+                zipcode = input.getText().toString().trim();
+
+                if(zipStringArray != null)
+                {
+                    Boolean shouldAdd = true;
+
+                    for(int i = 0; i < zipStringArray.length; i++)
+                    {
+                        //zip code already exists within the list
+                        if(zipStringArray[i].trim().equals(zipcode))
+                        {
+                            shouldAdd = false;
+                            break;
+                        }
+                    }
+
+                    if(shouldAdd) {
+                        if(recentZipcodes.size() >= MAX_LIST_SIZE)
+                            recentZipcodes.remove(0);
+                        recentZipcodes.add(zipcode);
+                    }
+                }
+                else
+                    recentZipcodes.add(zipcode);
+
+                Log.i("zipcode()", "recent zip codes: " + recentZipcodes.toString());
                 getLocation(zipcode);
             }
         });
@@ -220,7 +281,6 @@ public class MainActivity extends ActionBarActivity
 
     private void recent_zipcodes()
     {
-
     }
 
     private void current_weather()
