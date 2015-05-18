@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -20,7 +23,7 @@ import android.view.ViewGroup;
 public class ForecastFragment extends android.support.v4.app.Fragment
 {
     public int forecastPage;
-
+    static WeatherInfo weatherInfo;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,11 +41,11 @@ public class ForecastFragment extends android.support.v4.app.Fragment
      * @return A new instance of fragment ForecastFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ForecastFragment newInstance(int param1)
+    public static ForecastFragment newInstance(WeatherInfo weather)
     {
+        weatherInfo = weather;
         ForecastFragment fragment = new ForecastFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,10 +66,10 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup pager,
                              Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.forecast_fragment, container, false);
+        return inflater.inflate(R.layout.forecast_fragment, pager, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -95,7 +98,9 @@ public class ForecastFragment extends android.support.v4.app.Fragment
     @Override
     public void onResume()
     {
+        displayForecast();
         super.onResume();
+
     }
 
     @Override
@@ -121,4 +126,22 @@ public class ForecastFragment extends android.support.v4.app.Fragment
         public void onFragmentInteraction(Uri uri);
     }
 
+    public void displayForecast()
+    {
+        final TextView location = (TextView)getActivity().findViewById(R.id.location2);
+        final TextView day = (TextView)getActivity().findViewById(R.id.currDay);
+        final TextView high = (TextView)getActivity().findViewById(R.id.high);
+        final TextView low = (TextView)getActivity().findViewById(R.id.low);
+        final TextView am = (TextView)getActivity().findViewById(R.id.AM);
+        final TextView pm = (TextView)getActivity().findViewById(R.id.PM);
+        final TextView details = (TextView)getActivity().findViewById(R.id.textForecast);
+
+        location.setText(weatherInfo.location.name);
+        day.setText(weatherInfo.forecast.get(forecastPage).day + "");
+        high.setText(weatherInfo.forecast.get(forecastPage).pmForecast.temperature + "");
+        low.setText(weatherInfo.forecast.get(forecastPage).amForecast.temperature + "");
+        am.setText(weatherInfo.forecast.get(forecastPage).amForecast.description);
+        pm.setText(weatherInfo.forecast.get(forecastPage).amForecast.description);
+        details.setText(weatherInfo.forecast.get(forecastPage).amForecast.details);
+    }
 }

@@ -44,6 +44,7 @@ public class MainActivity extends ActionBarActivity
     WeatherInfo weatherInfo;
     int selectedFragment;
     int units;
+    int forecastPage;
     final static int NUM_PAGES = 7;
     final static int MAX_LIST_SIZE = 5;
     private ViewPager mObservationPager;
@@ -58,17 +59,18 @@ public class MainActivity extends ActionBarActivity
         setContentView(R.layout.activity_main);
         zipcode = "60563";
         recentZipsExist = false;
+        forecastPage = 0;
+        fragmentManager = getFragmentManager();
 
-        weatherFragment = new CurrentWeatherFragment();
-        mObservationPager = (ViewPager) findViewById(R.id.pager);
-        mObservationPagerAdapter = new ObservationScreenSlidePagerAdapter(getSupportFragmentManager());
-        mObservationPager.setAdapter(mObservationPagerAdapter);
-        mObservationPager.setVisibility(View.VISIBLE);
+//        mObservationPager = (ViewPager) findViewById(R.id.pager);
+//        mObservationPagerAdapter = new ObservationScreenSlidePagerAdapter(getSupportFragmentManager());
+//        mObservationPager.setAdapter(mObservationPagerAdapter);
+//        mObservationPager.setVisibility(View.VISIBLE);
 
-        mForecastPager = (ViewPager) findViewById(R.id.pager);
-        mForecastPagerAdapter = new ForecastScreenSlidePagerAdapter(getSupportFragmentManager());
-        mForecastPager.setAdapter(mForecastPagerAdapter);
-        mForecastPager.setVisibility(View.INVISIBLE);
+//        mForecastPager = (ViewPager) findViewById(R.id.pager);
+//        mForecastPagerAdapter = new ForecastScreenSlidePagerAdapter(getSupportFragmentManager());
+//        mForecastPager.setAdapter(mForecastPagerAdapter);
+//        mForecastPager.setVisibility(View.INVISIBLE);
 
         selectedFragment = 0;
         units = 0;
@@ -126,25 +128,27 @@ public class MainActivity extends ActionBarActivity
             mForecastPager.setCurrentItem(mForecastPager.getCurrentItem() - 1);
     }
 
-    private class ObservationScreenSlidePagerAdapter extends FragmentStatePagerAdapter
-    {
-        public ObservationScreenSlidePagerAdapter(FragmentManager fm)
-        {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position)
-        {
-            return weatherFragment;
-        }
-
-        @Override
-        public int getCount()
-        {
-            return 0;
-        }
-    }
+//    private class ObservationScreenSlidePagerAdapter extends FragmentStatePagerAdapter
+//    {
+//        public ObservationScreenSlidePagerAdapter(FragmentManager fm)
+//        {
+//            super(fm);
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position)
+//        {
+//            weatherFragment = new CurrentWeatherFragment().newInstance();
+//            weatherFragment.weatherInfo = weatherInfo;
+//            return weatherFragment;
+//        }
+//
+//        @Override
+//        public int getCount()
+//        {
+//            return 1;
+//        }
+//    }
 
     private class ForecastScreenSlidePagerAdapter extends FragmentStatePagerAdapter
     {
@@ -156,8 +160,10 @@ public class MainActivity extends ActionBarActivity
         @Override
         public Fragment getItem(int position)
         {
-            forecastFragment = new ForecastFragment().newInstance(position);
+            Log.i("ForecastFragment", "" + position);
+            forecastFragment = new ForecastFragment().newInstance(weatherInfo);
             forecastFragment.forecastPage = position;
+            //forecastFragment.displayForecast();
             return forecastFragment;
         }
 
@@ -311,13 +317,23 @@ public class MainActivity extends ActionBarActivity
     private void current_weather()
     {
         mForecastPager.setVisibility(View.INVISIBLE);
-        mObservationPager.setVisibility(View.VISIBLE);
-        weatherFragment.updateWeather(units);
+        //mObservationPager.setVisibility(View.VISIBLE);
+
+        fragmentManager.popBackStack();
+        weatherFragment = new CurrentWeatherFragment();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_in_right);
+        //fragmentTransaction.replace(R.id.container, weatherFragment);
+        fragmentTransaction.add(R.id.container, weatherFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        //weatherFragment.updateWeather(units);
     }
 
     private void forecast_weather()
     {
-        mObservationPager.setVisibility(View.INVISIBLE);
+        //mObservationPager.setVisibility(View.INVISIBLE);
+        fragmentManager.popBackStack();
         mForecastPager.setVisibility(View.VISIBLE);
     }
 
@@ -404,15 +420,19 @@ public class MainActivity extends ActionBarActivity
             public void handleResult(WeatherInfo result)
             {
                 weatherInfo = result;
+
+                mForecastPager = (ViewPager) findViewById(R.id.pager);
+                mForecastPagerAdapter = new ForecastScreenSlidePagerAdapter(getSupportFragmentManager());
+                mForecastPager.setAdapter(mForecastPagerAdapter);
+                mForecastPager.setVisibility(View.INVISIBLE);
+
                 if(selectedFragment == 0)
                 {
                     CurrentWeatherFragment.weatherInfo = weatherInfo;
-                    if(weatherFragment != null);
-                        //weatherFragment.updateWeather(units);
+                    if(weatherFragment != null)
+                        weatherFragment.updateWeather(units);
                     else
-                    {
                         current_weather();
-                    }
                 }
             }
         };

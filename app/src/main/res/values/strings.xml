@@ -4,7 +4,7 @@
     <string name="action_settings">Action Settings</string>
     <string name="zipcode">Zipcode</string>
     <string name="recent_zipcode">Recent Zipcodes</string>
-    <string name="current_weather">Current Forecast</string>
+    <string name="current_weather">Current Forecast </string>
     <string name="forecast">7-Day Forecast</string>
     <string name="units">Units</string>
     <string name="about">About</string>
@@ -15,12 +15,12 @@
     <string name="current_location">Current Location:</string>
     <string name="temperature">Temperature:</string>
     <string name="dew_point_temp">Dew Point Temp:</string>
-    <string name="humidity">Humidity:</string>
-    <string name="pressure">Pressure:</string>
-    <string name="visibility">Visibility:</string>
-    <string name="wind_speeds">Wind Speed:</string>
-    <string name="gusts">Gusts:</string>
+    <string name="humidity">Humidity: </string>
+    <string name="pressure">Pressure: </string>
+    <string name="visibility">Visibility: </string>
+    <string name="wind_speeds">Wind Speed: </string>
+    <string name="gusts">Gusts: </string>
     <string name="weather_description">Weather Description</string>
-    <string name="current_date">Current Date:</string>
-    <string name="current_time">Current Time:</string>
+    <string name="current_date">Current Date: </string>
+    <string name="current_time">Current Time: </string>
 </resources>
