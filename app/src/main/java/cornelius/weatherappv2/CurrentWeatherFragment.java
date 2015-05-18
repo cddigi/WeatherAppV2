@@ -21,7 +21,7 @@ import java.text.NumberFormat;
  * Use the {@link CurrentWeatherFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CurrentWeatherFragment extends android.support.v4.app.Fragment
+public class CurrentWeatherFragment extends Fragment
 {
     public static WeatherInfo weatherInfo;
     private OnFragmentInteractionListener mListener;
@@ -86,8 +86,7 @@ public class CurrentWeatherFragment extends android.support.v4.app.Fragment
     public void onResume()
     {
         super.onResume();
-        header();
-        imperial();
+        updateWeather(0);
     }
 
     @Override
@@ -118,7 +117,7 @@ public class CurrentWeatherFragment extends android.support.v4.app.Fragment
         final ImageView image = (ImageView)getActivity().findViewById(R.id.picture);
         final TextView location = (TextView)getActivity().findViewById(R.id.location);
         final TextView time = (TextView)getActivity().findViewById(R.id.time);
-        final TextView conditions = (TextView)getActivity().findViewById(R.id.currentConditionsLabel);
+        final TextView conditions = (TextView)getActivity().findViewById(R.id.conditions);
         final TextView humidity = (TextView)getActivity().findViewById(R.id.humid);
 
         location.setText(weatherInfo.location.name);

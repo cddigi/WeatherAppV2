@@ -10,9 +10,10 @@
     tools:context=".ForecastFragment">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/currLoc"
         android:layout_alignEnd="@+id/tableLayout">
 
         <TextView
@@ -27,26 +28,35 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editText3"
-            android:text="@string/current_date"
+            android:id="@+id/location2"
+            android:text=" "
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" "
+        android:id="@+id/currDay"
+        android:layout_below="@+id/currLoc"
+        android:layout_centerHorizontal="true"/>
+
     <ImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:id="@+id/imageView"
         android:layout_row="3"
         android:layout_column="2"
+        android:layout_below="@+id/currDay"
         android:layout_above="@+id/textView"
         android:layout_centerHorizontal="true" />
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="164dp"
+        android:layout_height="100dp"
         android:layout_row="4"
         android:layout_column="2"
         android:background="#dd325b68"
@@ -55,93 +65,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
 
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:id="@+id/row">
-
-            <TextView
-                android:id="@+id/dew"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_marginTop="5dp"
-                android:text="@string/weather_description"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14dp" />
-
-            <TextView
-                android:id="@+id/windspeed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_marginLeft="70dp"
-                android:layout_marginTop="5dp"
-                android:text=" "
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14dp" />
-        </TableRow>
-
-        <TableRow
-            style="bold"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-
-            <TextView
-                android:id="@+id/humid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_marginTop="5dp"
-                android:text=" "
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14dp" />
-
-            <TextView
-                android:id="@+id/gusts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_marginLeft="70dp"
-                android:layout_marginTop="5dp"
-                android:text=" "
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14dp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-
-            <TextView
-                android:id="@+id/pressure"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="0"
-                android:layout_marginTop="5dp"
-                android:text=" "
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="14dp" />
-        </TableRow>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/textForecast"/>
     </TableLayout>
 
     <TextView
@@ -152,6 +79,15 @@
         android:id="@+id/textView"
         android:layout_above="@+id/editText"
         android:layout_marginLeft="50dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="HIGH"
+        android:id="@+id/high"
+        android:layout_above="@+id/editText"
+        android:layout_alignLeft="@id/textView"
+        android:layout_marginLeft="40dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -161,24 +97,49 @@
         android:id="@+id/textView2"
         android:layout_alignTop="@+id/textView"
         android:layout_marginLeft="250dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="LOW"
+        android:id="@+id/low"
+        android:layout_above="@+id/editText"
+        android:layout_alignLeft="@id/textView2"
+        android:layout_marginLeft="40dp" />
 
     <TextView
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
         android:id="@+id/editText"
         android:text="@string/AM"
         android:background="#ff4b6f7a"
-        android:layout_alignTop="@+id/editText2"
-        android:layout_alignBottom="@+id/editText2"
-        android:layout_alignParentStart="true" />
+        android:layout_above="@+id/tableLayout"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/editText2"/>
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="55dp"
+        android:id="@+id/AM"
+        android:text=" "
+        android:background="#ff4b6f7a"
+        android:layout_above="@+id/tableLayout"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/editText2"/>
 
     <TextView
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
+        android:layout_width="165dp"
+        android:layout_height="75dp"
         android:id="@+id/editText2"
         android:text="@string/PM"
         android:layout_above="@+id/tableLayout"
         android:layout_alignParentEnd="true"
         android:background="#648c8c8c" />
+    <TextView
+        android:layout_width="165dp"
+        android:layout_height="55dp"
+        android:id="@+id/PM"
+        android:text=" "
+        android:layout_above="@+id/tableLayout"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>
