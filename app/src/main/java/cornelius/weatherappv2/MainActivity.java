@@ -35,7 +35,8 @@ public class MainActivity extends ActionBarActivity
     String zipcode;
     String[] zipStringArray;
     ArrayList<String> recentZipcodes;
-    Boolean imperialPreferred;
+    Boolean imperialPreferred,
+            recentZipsExist;
     android.app.FragmentManager fragmentManager;
     android.app.FragmentTransaction fragmentTransaction;
     CurrentWeatherFragment weatherFragment;
@@ -56,6 +57,7 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         zipcode = "60563";
+        recentZipsExist = false;
 
         weatherFragment = new CurrentWeatherFragment();
         mObservationPager = (ViewPager) findViewById(R.id.pager);
@@ -73,9 +75,11 @@ public class MainActivity extends ActionBarActivity
 
         // get stored zips and measurement preference from previous sessions
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        recentZipcodes = new ArrayList<>();
         String zipString = sharedPref.getString("zipcodes","");
         if(zipString.length() > 1)
         {
+            recentZipsExist = true;
             zipString = zipString.substring(1, zipString.length()-1);
             zipStringArray = zipString.split(",");
             for(int i = 0; i < zipStringArray.length; i++)
@@ -262,7 +266,7 @@ public class MainActivity extends ActionBarActivity
                         recentZipcodes.add(zipcode);
                     }
                 }
-                else
+                else if(recentZipsExist == true)
                     recentZipcodes.add(zipcode);
 
                 Log.i("zipcode()", "recent zip codes: " + recentZipcodes.toString());
@@ -281,6 +285,27 @@ public class MainActivity extends ActionBarActivity
 
     private void recent_zipcodes()
     {
+        if(recentZipcodes != null)
+        {
+            String zipString = recentZipcodes.toString();
+            zipString = zipString.substring(1, zipString.length()-1);
+            zipStringArray = zipString.split(",");
+            zipString = "";
+            for(int i = 0; i < zipStringArray.length; i++)
+                zipString += zipStringArray[i].trim() + "\n";
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Recent Zipcodes").setMessage(zipString)
+                    .setNeutralButton("okay", new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // FIRE ZE MISSILES!
+                        }
+                    });
+
+            builder.show();
+        }
     }
 
     private void current_weather()
