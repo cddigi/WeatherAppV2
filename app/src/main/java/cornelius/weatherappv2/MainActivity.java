@@ -3,6 +3,7 @@ package cornelius.weatherappv2;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +37,8 @@ public class MainActivity extends ActionBarActivity
     String zipcode;
     String[] zipStringArray;
     ArrayList<String> recentZipcodes;
-    Boolean recentZipsExist;
+    Boolean imperialPreferred,
+            recentZipsExist;
     android.app.FragmentManager fragmentManager;
     android.app.FragmentTransaction fragmentTransaction;
     CurrentWeatherFragment weatherFragment;
@@ -72,6 +75,7 @@ public class MainActivity extends ActionBarActivity
 //        mForecastPager.setVisibility(View.INVISIBLE);
 
         selectedFragment = 0;
+        units = 0;
 
         // get stored zips and measurement preference from previous sessions
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -86,7 +90,14 @@ public class MainActivity extends ActionBarActivity
                 recentZipcodes.add(zipStringArray[i].trim());
         }
 
-        units = sharedPref.getInt("units", 0);
+        imperialPreferred = sharedPref.getBoolean("imperial", true);
+    }
+
+    //Click on text: "current location" above picture, to launch GEO intent
+    public void onClick(View V)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:<lat>,<long>?q=<lat>,<long>(Label+Name)"));
+        startActivity(intent);
     }
 
     @Override
@@ -105,7 +116,7 @@ public class MainActivity extends ActionBarActivity
         if(recentZipcodes.size() > 0)
             editor.putString("zipcodes", recentZipcodes.toString());
 
-        editor.putInt("units", units);
+        editor.putBoolean("imperial", imperialPreferred);
 
         // Commit the edits!
         editor.commit();
@@ -224,7 +235,7 @@ public class MainActivity extends ActionBarActivity
     {
         new AlertDialog.Builder(this)
                 .setTitle("About")
-                .setMessage("This is a weather app. Created by Cornelius and Tessa. " +
+                .setMessage("This is a weather app. Created by Cornelius, Tessa, & Victor. " +
                         "Data from www.weather.gov")
                 .setNeutralButton("Ok", new DialogInterface.OnClickListener()
                 {
@@ -304,7 +315,7 @@ public class MainActivity extends ActionBarActivity
                     .setNeutralButton("okay", new DialogInterface.OnClickListener()
                     {
                         public void onClick(DialogInterface dialog, int id) {
-                            // FIRE ZE MISSILES!
+                            // ok
                         }
                     });
 
