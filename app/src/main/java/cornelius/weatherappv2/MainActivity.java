@@ -1,3 +1,17 @@
+/*
+ 	Authors: Cornelius Donley, Tessa Olownuik, and Victor Bashorun
+ 	File: MainActivity.java
+ 	Description: Basic weather app that gets a zip code from the user
+		and displays the current weather of that location. Also allows
+		for the 7-day forecast of that area, switch between imperial
+		and metric, and launching of maps application.
+
+    Issues: Forecast not updating the currently displayed fragment.
+	Not implemented: Downloading, displaying, and storing the current weather
+		image, toasts, and notifications.
+ 	Date: 5/19/2015
+ */
+
 package cornelius.weatherappv2;
 
 import android.app.AlertDialog;
