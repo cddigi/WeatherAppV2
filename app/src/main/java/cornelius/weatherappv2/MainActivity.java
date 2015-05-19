@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -120,6 +119,7 @@ public class MainActivity extends ActionBarActivity
 
         // Commit the edits!
         editor.commit();
+        super.onStop();
     }
     
 
