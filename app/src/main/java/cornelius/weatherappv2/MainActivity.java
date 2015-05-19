@@ -35,8 +35,7 @@ public class MainActivity extends ActionBarActivity
     String zipcode;
     String[] zipStringArray;
     ArrayList<String> recentZipcodes;
-    Boolean imperialPreferred,
-            recentZipsExist;
+    Boolean recentZipsExist;
     android.app.FragmentManager fragmentManager;
     android.app.FragmentTransaction fragmentTransaction;
     CurrentWeatherFragment weatherFragment;
@@ -73,7 +72,6 @@ public class MainActivity extends ActionBarActivity
 //        mForecastPager.setVisibility(View.INVISIBLE);
 
         selectedFragment = 0;
-        units = 0;
 
         // get stored zips and measurement preference from previous sessions
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -88,7 +86,7 @@ public class MainActivity extends ActionBarActivity
                 recentZipcodes.add(zipStringArray[i].trim());
         }
 
-        imperialPreferred = sharedPref.getBoolean("imperial", true);
+        units = sharedPref.getInt("units", 0);
     }
 
     @Override
@@ -107,7 +105,7 @@ public class MainActivity extends ActionBarActivity
         if(recentZipcodes.size() > 0)
             editor.putString("zipcodes", recentZipcodes.toString());
 
-        editor.putBoolean("imperial", imperialPreferred);
+        editor.putInt("units", units);
 
         // Commit the edits!
         editor.commit();

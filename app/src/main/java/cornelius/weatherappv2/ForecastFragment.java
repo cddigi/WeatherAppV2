@@ -138,10 +138,17 @@ public class ForecastFragment extends android.support.v4.app.Fragment
 
         location.setText(weatherInfo.location.name);
         day.setText(weatherInfo.forecast.get(forecastPage).day + "");
-        high.setText(weatherInfo.forecast.get(forecastPage).pmForecast.temperature + "");
-        low.setText(weatherInfo.forecast.get(forecastPage).amForecast.temperature + "");
-        am.setText(weatherInfo.forecast.get(forecastPage).amForecast.description);
-        pm.setText(weatherInfo.forecast.get(forecastPage).amForecast.description);
-        details.setText(weatherInfo.forecast.get(forecastPage).amForecast.details);
+        if(weatherInfo.forecast.get(forecastPage).pmForecast != null)
+            high.setText(weatherInfo.forecast.get(forecastPage).pmForecast.temperature + "");
+        if(weatherInfo.forecast.get(forecastPage).amForecast != null)
+            low.setText(weatherInfo.forecast.get(forecastPage).amForecast.temperature + "");
+        if(weatherInfo.forecast.get(forecastPage).amForecast != null)
+            am.setText(weatherInfo.forecast.get(forecastPage).amForecast.description);
+        if(weatherInfo.forecast.get(forecastPage).pmForecast != null)
+            pm.setText(weatherInfo.forecast.get(forecastPage).pmForecast.description);
+        if(weatherInfo.forecast.get(forecastPage).amForecast != null)
+            details.setText(weatherInfo.forecast.get(forecastPage).amForecast.details);
+        else
+            details.setText(weatherInfo.forecast.get(forecastPage).pmForecast.details);
     }
 }
